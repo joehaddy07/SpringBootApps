@@ -1,0 +1,74 @@
+pipeline {
+    agent {
+        label 'maven-host'
+    }
+    
+    tools {
+        maven 'MavenTool'  // Maven tool configured in Jenkins
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: '*/main']],
+                    doGenerateSubmoduleConfigurations: false, 
+                    extensions: [], 
+                    userRemoteConfigs: [[url: 'https://github.com/joehaddy07/SpringBoot_Project.git']]
+                ])
+            }
+        }
+
+    stage('Build with Maven') {
+        steps {
+             script {
+                     sh 'mvn clean install'
+                   }
+
+                
+            }
+        }
+
+        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build Docker image
+                    sh 'docker build -t joehaddy/springdevops .'
+                }
+            }
+        }
+        
+        stage('Push Docker Image To Docker Hub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'Docker-Hub', 
+                    passwordVariable: 'DockerPassWord', 
+                    usernameVariable: 'DockerUserName')]) {
+                        // Login to Docker Hub
+                        sh 'echo $DockerPassWord | docker login -u $DockerUserName --password-stdin'
+                        
+                        // Push image to Docker Hub
+                        sh 'docker push joehaddy/springdevops'
+                        
+                        // Logout from Docker Hub (good practice)
+                        sh 'docker logout'
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Build succeeded!'
+        }
+        failure {
+            echo 'Build failed!'
+        }
+    }
+}
+
+
+         
