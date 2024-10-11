@@ -51,7 +51,7 @@ pipeline {
             steps {
                 script {
                     // Build Docker image
-                    sh 'docker build -t joehaddy/springbootdemo:v1 .'
+                    sh 'docker buildx build -t joehaddy/springbootdemo:v1 .'
                 }
             }
         }
