@@ -4,7 +4,11 @@ pipeline {
     }
     
     tools {
-        maven 'MavenTool'  // Maven tool configured in Jenkins
+        maven 'MavenTool'  // Ensure this is configured in Jenkins
+    }
+
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'  // SonarQube scanner tool configured in Jenkins
     }
 
     stages {
@@ -15,31 +19,43 @@ pipeline {
                     branches: [[name: '*/main']],
                     doGenerateSubmoduleConfigurations: false, 
                     extensions: [], 
-                    userRemoteConfigs: [[url: 'https://github.com/joehaddy07/SpringBoot_Project.git']]
+                    userRemoteConfigs: [[url: 'https://github.com/joehaddy07/SpringBootApps.git']]
                 ])
             }
         }
 
-    stage('Build with Maven') {
-        steps {
-             script {
-                     sh 'mvn clean install'
-                   }
-
-                
+        stage('Build with Maven') {
+            steps {
+                script {
+                    dir('SpringBootApps') {  // Adjust path to where pom.xml is located
+                        sh 'mvn clean install'
+                    }
+                }
             }
         }
 
-        
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('Sonar-server') {  // Use the SonarQube server installation name
+                    // Run SonarQube analysis using the scanner
+                    
+                    sh '''
+                        $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=SpringBootAppsDevOps \
+                       -Dsonar.java.binaries=. \
+                    '''
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
                     // Build Docker image
-                    sh 'docker build -t joehaddy/springdevops .'
+                    sh 'docker build -t joehaddy/springbootdemo:v1 .'
                 }
             }
         }
-        
+
         stage('Push Docker Image To Docker Hub') {
             steps {
                 script {
@@ -50,16 +66,16 @@ pipeline {
                         sh 'echo $DockerPassWord | docker login -u $DockerUserName --password-stdin'
                         
                         // Push image to Docker Hub
-                        sh 'docker push joehaddy/springdevops'
+                        sh 'docker build -t joehaddy/springbootdemo:v1 .'
                         
-                        // Logout from Docker Hub (good practice)
+                        // Logout from Docker Hub
                         sh 'docker logout'
                     }
                 }
             }
         }
     }
-    
+
     post {
         success {
             echo 'Build succeeded!'
@@ -69,6 +85,3 @@ pipeline {
         }
     }
 }
-
-
-         
