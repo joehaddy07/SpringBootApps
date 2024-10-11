@@ -66,7 +66,7 @@ pipeline {
                         sh 'echo $DockerPassWord | docker login -u $DockerUserName --password-stdin'
                         
                         // Push image to Docker Hub
-                        sh 'docker push -t joehaddy/springbootdemo:v1 .'
+                        sh 'docker push joehaddy/springbootdemo:v1 .'
                         
                         // Logout from Docker Hub
                         sh 'docker logout'
