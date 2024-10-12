@@ -16,4 +16,4 @@ ADD target/SpringBootApps-0.0.1-SNAPSHOT.jar /app/SpringBootApps.jar
 EXPOSE 8080
 
 # Command to run the application
-ENTRYPOINT ["java", "-jar", "/app/SpringBootApps-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/app/SpringBootApps.jar"]
