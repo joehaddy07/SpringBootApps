@@ -8,10 +8,10 @@ LABEL Maintainer="Joseph Haddison" \
 
 
 # Copy the JAR file (or the project directory) to the container
-ADD   SpringBootApps/target/ SpringBootApps-0.0.1-SNAPSHOT.jar
+ ADD target/spring-devops.jar spring-devops.jar
 
 # Expose the application port (optional, typically 8080 for Spring Boot apps)
 EXPOSE 8080
 
 # Command to run the application
-ENTRYPOINT ["java", "-jar", "/SpringBootApps-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/spring-devops.jar"]
