@@ -16,4 +16,4 @@ COPY target/SpringBootApps /app/SpringBootApps
 EXPOSE 8080
 
 # Command to run the application
-ENTRYPOINT ["java", "-jar", "/app/SpringBootApps.jar"]
+ENTRYPOINT ["java", "-jar", "/app/SpringBootApps"]
