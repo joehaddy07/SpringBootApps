@@ -10,7 +10,7 @@ LABEL Maintainer="Joseph Haddison" \
 WORKDIR /app
 
 # Copy the JAR file (or the project directory) to the container
-COPY target/SpringBootApps-0.0.1-SNAPSHOT.jar /app/SpringBootApps
+ADD target/SpringBootApps-0.0.1-SNAPSHOT.jar /app/SpringBootApps
 
 # Expose the application port (optional, typically 8080 for Spring Boot apps)
 EXPOSE 8080
