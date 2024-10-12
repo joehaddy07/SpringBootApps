@@ -10,7 +10,7 @@ LABEL Maintainer="Joseph Haddison" \
 
 
 # Copy the JAR file from the build context to the container
-COPY target/SpringBootApps-0.0.1-SNAPSHOT.jar SpringBootApps.jar
+ADD target/SpringBootApps-0.0.1-SNAPSHOT.jar SpringBootApps.jar
 
 # Expose the application port (8080 for Spring Boot apps)
 EXPOSE 8080
