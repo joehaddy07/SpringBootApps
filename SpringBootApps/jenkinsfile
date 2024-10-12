@@ -40,18 +40,35 @@ pipeline {
                     // Run SonarQube analysis using the scanner
                     
                     sh '''
-                        $SCANNER_HOME/bin/sonar-scanner -Dsonar.ProjectName=SpringBootAppsDevOps \
+                        $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=SpringBootAppsDevOps \
                        -Dsonar.java.binaries=. \
                     '''
                 }
             }
         }
 
+        stage('Check Dockerfile') {
+            steps {
+                dir('SpringBootApps') {
+                // some block
+                script {
+                    if (fileExists(env.DOCKERFILE)) {
+                        echo "Dockerfile exists: ${env.DOCKERFILE}"
+                    } else {
+                        error "Dockerfile does not exist: ${env.DOCKERFILE}"
+                    }
+                }
+
+               }
+            }
+        }
+
+
         stage('Build Docker Image') {
             steps {
                 script {
                     // Build Docker image
-                    sh 'docker buildx build -t joehaddy/springbootdemo:v1 .'
+                    sh 'docker build -t joehaddy/springbootdemo:v1 .'
                 }
             }
         }
