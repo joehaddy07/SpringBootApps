@@ -6,11 +6,9 @@ LABEL Maintainer="Joseph Haddison" \
       Email="joelhaddy07@gmail.com" \
       Team="SRE"
 
-# Set working directory
-WORKDIR /app
 
 # Copy the JAR file (or the project directory) to the container
-ADD target/Spring-Apps.jar /app/Spring-Apps.jar
+ADD target/Spring-Apps.jar Spring-Apps.jar
 
 # Expose the application port (optional, typically 8080 for Spring Boot apps)
 EXPOSE 8080
